@@ -12,8 +12,8 @@ using namespace std;
 
 typedef int infotype;
 typedef struct tElmtList *address;
-typedef struct ...(a)... {
-	infotype 	...(b)...;
+typedef struct tElmtList { //a
+	infotype 	info; //b
 	address 	next;
 } ElmtList;
 
@@ -35,14 +35,14 @@ typedef struct {
 
 bool isListEmpty (List L){
 	/* Mengirim true jika list kosong */
-	return ...(c)...;
+	return ((L).first==NULL); //c
 }
 
 void createList (List *L){
 	/*	I.S. sembarang
 		F.S. Terbentuk list kosong 
 	*/
-	...(d)...
+	((*L).first==NULL)
 
 }
 
@@ -52,13 +52,13 @@ address alokasi (infotype X){
 		Info(P) = X, Next(P) = Nil
 		Jika alokasi gagal, mengirimkan Nil
 	*/
-	address P = address(malloc(sizeof(...(e)...)));
-	if(...(f)...)
+	address P = address(malloc(sizeof( ElmtList ))); //e
+	if(P==Nil)
 		return Nil;
 
-	...(g)... = X;
-	Next(P) = ...(h)...;
-	return ...(i)...;
+	Info(p) = X;
+	Next(P) = Nil;
+	return P;
 	
 }
 
@@ -77,10 +77,10 @@ void insertFirst (List *L, infotype X){
 		nilai X jika alokasi berhasil.
 		Jika alokasi gagal: I.S.= F.S.
 	*/
-	address P = ...(j)...;
+	address P = alokasi (X);
 	if(P!=Nil){
-		...(k)...=First(*L);
-		First(*L) = ...(l)...;
+		Next(p)=First(*L);
+		First(*L) = P;
 	}
 }
 
@@ -89,8 +89,8 @@ void insertAfter (List *L, address P, address Prec){
 		P sudah dialokasi
 		F.S. Insert P sebagai elemen sesudah elemen beralamat Prec
 	*/
-	Next(P)=...(m)...;
-	...(n)...=P;
+	Next(P)=Next(Prec);
+	Next(Prec)=P;
 }
 
 
@@ -102,16 +102,21 @@ void insertLast (List *L, infotype X){
 		elemen terakhir yang baru bernilai X jika alokasi berhasil.
 		Jika alokasi gagal: I.S.= F.S.
 	*/
-	...(r)... = alokasi(X);
+	Address P = alokasi(X);
 	if(isListEmpty(*L))
-		...(s)...
+		insertFirst(L,X);
 	else{
 		address last = getLast(*L);
 		insertAfter(L,...(t)...,last);
 	}
 }
-
-
+address getLast(First *L){
+	address P= First(*L);
+	while(Next(P)!=Nil){
+		P=Next(P);
+	}
+	return P;
+}
 /*
 * Fungsi Overloading => merupakan fungsi yang memiliki nama sama
 * namum memiliki parameter dan iplementasi yang berbeda.
@@ -127,8 +132,8 @@ void insertFirst(List *L,address P){
 		P hasil Alokasi X.
 		Jika alokasi gagal: I.S.= F.S.
 	*/
-	Next(P)=...(u)...;
-	First(*L) = ...(v)...;
+	Next(P)=First(*L);
+	First(*L) =P;
 }
 
 void insertLast(List *L,address P){
@@ -139,10 +144,10 @@ void insertLast(List *L,address P){
 		Jika alokasi gagal: I.S.= F.S.
 	*/
 	if(isListEmpty(*L))
-		...(w)...
+		insertFirst(L,P);
 	else{
-		address last = ...(x)...
-		insertAfter(L,P,...(y)...);
+		address last = getLast(L);
+		insertAfter(L,P,Last);
 	}
 }
 
@@ -153,10 +158,10 @@ void deleteFirst (List *L, infotype *X){
 	*/
 	address P = First(*L);
 	*X = Info(P);
-    if (...(z)...)    // 1 element only
-        ...(1)...
+    if (First(*L)==Nil)    // 1 element only
+        dealokasi(*P);
     else
-        ...(2)...;
+        First(*L)=Next(P);
 }
 
 void deleteAfter (List *L, address *Pdel, address Prec){
@@ -196,14 +201,14 @@ void printInfo (List L){
 		Semua info yg disimpan pada elemen list diprint dengan format [elemen-1, elemen-2, elemen-3, ...]
 		Jika list kosong, hanya menuliskan "[]"
 	*/
-	cout<<...(16)...;
+	cout<<"[";
 	if(!isListEmpty(L)){
 		address P = First(L);
-		while(...(17)...){
+		while(Next(P)!=Nil){
 			cout<<Info(P)<<", ";
 			P = Next(P);
 		}
-		cout<<...(18)...;
+		cout<<Info(P);
 	}
-	cout<<...(19)...<<endl;
+	cout<<"]"<<endl;
 }
